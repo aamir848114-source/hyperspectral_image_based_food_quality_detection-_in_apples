@@ -1,298 +1,660 @@
-# Hierarchical Reasoning Model (HRM) on Sudoku Puzzles
+Bilkul. Tumhare **new project report + PPT** ke basis par GitHub ke liye `README.md` ka **complete text form** neeche de raha hoon. Ye project hai **“Hyperspectral Image Based Food Quality Inspection for Pesticide Detection in Apples”**. Report mein dataset, PCA preprocessing, VGG16/ResNet50/ViT feature extraction, six classifiers aur final ViT + ANN results documented hain. 
 
-A Minor Project focused on implementing and evaluating the **Hierarchical Reasoning Model (HRM)** for solving challenging 9×9 Sudoku puzzles. The project studies whether hierarchical recurrent reasoning can achieve strong computational depth and effective backtracking while learning from a very small number of training examples.
+Isko directly **GitHub → README.md** mein paste kar sakte ho.
+
+````markdown
+# 🍎 Hyperspectral Image Based Food Quality Inspection for Pesticide Detection in Apples
+
+An AI-based food quality inspection system that uses **Hyperspectral Imaging (HSI)**, **Deep Learning**, and **Machine Learning** to classify apples according to their pesticide concentration.
+
+The system classifies apples into three categories:
+
+- 🟢 Fresh
+- 🟡 Low Pesticide Concentration
+- 🔴 High Pesticide Concentration
+
+The project combines hyperspectral image preprocessing, data augmentation, pretrained deep learning feature extractors, and machine learning classifiers to build an automated and non-destructive pesticide detection pipeline.
+
+---
 
 ## 👥 Project Team
 
-* **Hamza Ehsan** — 23AIBEA627
-* **Md. Dilnawaz Hussain** — 22AIB470
-* **Supervisor:** Miss Ayesha Khan
-* **Project:** Minor Project - 1
+### Md Dilnawaz Hussain
+- Faculty No.: 22AIB470
+
+### Hamza Ehsan
+- Faculty No.: 23AIBEA627
+
+**Supervisor:** Dr. Junaid Ali Reshi
+
+**Project:** Minor Project - 2  
+**Course Code:** AIP-3952
+
+**Institution:**  
+Zakir Husain College of Engineering & Technology  
+Aligarh Muslim University, Aligarh, India
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
-The **Hierarchical Reasoning Model (HRM)** is a recurrent neural network architecture inspired by hierarchical and multi-timescale processing. Instead of relying on explicit Chain-of-Thought (CoT) supervision, HRM uses two interdependent reasoning modules:
+Pesticide residues on agricultural products can create serious food safety concerns. Traditional pesticide detection techniques such as laboratory-based chemical analysis can be accurate but are generally time-consuming, costly, and destructive.
 
-* **High-Level (H) Module** — performs higher-level planning and maintains global context.
-* **Low-Level (L) Module** — performs faster, detailed computations and local constraint checking.
+This project explores **Hyperspectral Imaging (HSI)** as a non-destructive alternative.
 
-The project applies HRM to **Sudoku**, a constraint-satisfaction problem that requires search, reasoning, and backtracking.
+Hyperspectral imaging captures information across hundreds of spectral bands, providing both spatial and spectral information about the target object.
 
-The Sudoku input is represented as an 81-token sequence corresponding to the 9×9 grid. The model predicts the solved Sudoku grid while iteratively refining its intermediate states.
+In this project, hyperspectral images of apples are processed using PCA and pretrained deep learning architectures. The extracted features are then classified using different machine learning models.
 
----
-
-## 🎯 Objectives
-
-1. Study the Hierarchical Reasoning Model and its recurrent reasoning mechanism.
-2. Train HRM using only **1,000 Sudoku training examples** with data augmentation.
-3. Evaluate HRM on unseen Sudoku puzzles.
-4. Compare HRM with:
-
-   * Recurrent Transformer
-   * Recurrent Relational Network (RRN)
-   * SATNet
-5. Analyze intermediate reasoning timesteps and backtracking behaviour.
-6. Investigate data-efficient reasoning for difficult constraint-based problems.
-
----
-
-## 🧩 Problem Statement
-
-Develop a reasoning architecture capable of handling tasks that require extensive search and backtracking while using a minimal amount of training data.
-
-Sudoku is used as the test problem because every prediction must satisfy constraints across:
-
-* Rows
-* Columns
-* 3×3 boxes
-
----
-
-## 📊 Dataset
-
-The project uses the **Sudoku-Extreme** dataset.
-
-### Dataset Characteristics
-
-* Sudoku puzzles are represented by a `question` field containing an incomplete puzzle.
-* The `answer` field contains the corresponding solved puzzle.
-* A rating/backtracking-related field is also associated with the dataset.
-* The project uses **1,000 original training examples** and applies augmentation to increase the effective training diversity.
-
-### Input Representation
-
-Each Sudoku board contains:
+The complete pipeline is:
 
 ```text
-9 × 9 = 81 cells
+Hyperspectral Image
+        ↓
+Data Augmentation
+        ↓
+Data Split
+        ↓
+PCA Dimensionality Reduction
+        ↓
+RGB Conversion
+        ↓
+Resize to 224 × 224
+        ↓
+ImageNet Normalization
+        ↓
+Deep Learning Feature Extraction
+        ↓
+VGG16 / ResNet50 / ViT-B/16
+        ↓
+Feature Vector
+        ↓
+Machine Learning Classifier
+        ↓
+Fresh / Low / High Pesticide
+````
+
+---
+
+# 🎯 Objectives
+
+The main objectives of this project are:
+
+1. Develop an automated food quality inspection system for apples.
+2. Detect pesticide concentration using hyperspectral images.
+3. Classify apples into:
+
+   * Fresh
+   * Low pesticide concentration
+   * High pesticide concentration
+4. Apply data augmentation to increase the available training samples.
+5. Reduce the dimensionality of hyperspectral data using PCA.
+6. Extract features using pretrained:
+
+   * VGG16
+   * ResNet50
+   * Vision Transformer (ViT-B/16)
+7. Evaluate multiple machine learning classifiers.
+8. Compare different feature extractor and classifier combinations.
+9. Develop a prediction dashboard for hyperspectral apple quality inspection.
+
+---
+
+# 🧩 Problem Statement
+
+The core problem is to accurately detect pesticide and fertilizer residues in apples using a **non-destructive hyperspectral imaging approach**.
+
+Traditional chemical testing is slow, costly, and not suitable for real-time large-scale inspection.
+
+The project therefore aims to develop an automated machine learning pipeline capable of distinguishing between:
+
+```text
+Fresh Apple
+     ↓
+Low Pesticide Concentration
+     ↓
+High Pesticide Concentration
 ```
 
-The puzzle is flattened into an 81-token sequence.
+The major technical challenges include:
 
-Token mapping:
-
-```text
-'.' → 0
-'1' → 1
-'2' → 2
-...
-'9' → 9
-```
-
-The integer sequence is converted into a tensor and passed through an embedding layer.
+* High-dimensional hyperspectral data
+* 281 spectral channels
+* Limited original dataset size
+* Class imbalance
+* Selection of suitable feature extraction architecture
+* Selection of an effective machine learning classifier
 
 ---
 
-## 🔄 Data Augmentation
+# 📊 Dataset
 
-Four rule-preserving transformations are used:
+The project uses the hyperspectral apple dataset introduced by **Roomi et al.**
 
-### 1. Digit Permutation
+The dataset was captured using a **Resonon Pika L hyperspectral camera**.
 
-Randomly permutes digits 1–9 while keeping blank cells unchanged.
+### Camera Specifications
 
-### 2. Transposition
+```text
+Spectral Range : 400–1000 nm
+Spectral Bands : 281
+Spatial Pixels : 900 pixels per line
+```
 
-With 50% probability, rows and columns are swapped.
+The original dataset contains **617 hyperspectral images**.
 
-### 3. Band Shuffling
+The apples belong to three categories:
 
-The three groups of rows are permuted, and rows within each band can also be shuffled.
+| Class              | Description                         |
+| ------------------ | ----------------------------------- |
+| Fresh              | No chemical treatment               |
+| Low Concentration  | 1 ml/g chemical in 1 litre of water |
+| High Concentration | 3 ml/g chemical in 1 litre of water |
 
-### 4. Stack Shuffling
+After data augmentation:
 
-The three groups of columns are permuted, and columns within each stack can also be shuffled.
+```text
+Total Images = 2,634
+```
 
-These transformations preserve the underlying Sudoku constraints while producing diverse training examples.
+Class distribution:
+
+| Class              | Samples | Approx. Percentage |
+| ------------------ | ------: | -----------------: |
+| Fresh              |     684 |                26% |
+| High Concentration |     954 |                36% |
+| Low Concentration  |     996 |                38% |
 
 ---
 
-## 🏗️ HRM Architecture
+# 🔄 Data Augmentation
 
-The overall pipeline is:
+Because the original dataset contains only 617 images and has class imbalance, multiple augmentation techniques were applied.
 
-```text
-Sudoku Puzzle
-      ↓
-Tokenization
-      ↓
-Integer Index Mapping
-      ↓
-Embedding Layer
-      ↓
-┌───────────────────────────────┐
-│     Hierarchical Reasoning    │
-│                               │
-│   High-Level (H) Module       │
-│             ↕                 │
-│   Low-Level (L) Module        │
-│                               │
-└───────────────────────────────┘
-      ↓
-    Q-Head
-      ↓
-Halt / Continue Decision
-      ↓
-Output Head
-      ↓
-Softmax Probabilities
-      ↓
-Solved Sudoku
-```
+The following transformations were used:
 
-### Main Components
+### 1. Horizontal Flip
 
-#### Embedding Layer
+Mirrors the image from left to right.
 
-Converts discrete Sudoku tokens into vector representations.
+### 2. Vertical Flip
 
-#### High-Level Module (H)
+Flips the image from top to bottom.
 
-An encoder-only Transformer block operating at a slower reasoning timescale. It integrates information from the lower-level computations and supports higher-level planning.
+### 3. Rotation 90°
 
-#### Low-Level Module (L)
+Rotates the image by 90° counter-clockwise.
 
-An encoder-only Transformer block that performs faster, detailed reasoning and local constraint checking.
+### 4. Rotation 180°
 
-#### Q-Head
+Rotates the image by 180°.
 
-Uses a Q-learning based decision mechanism to determine whether the model should:
+### 5. Rotation 270°
+
+Rotates the image by 270° counter-clockwise.
+
+After augmentation:
 
 ```text
-HALT     → stop reasoning
-CONTINUE → perform another reasoning step
-```
-
-This forms the basis of **Adaptive Computation Time (ACT)**.
-
-#### Output Layer
-
-Transforms hidden states into logits, which are converted into probabilities using Softmax.
-
----
-
-## 🧠 Training & Optimization
-
-The project uses several techniques to make recurrent reasoning computationally practical.
-
-### One-Step Gradient Approximation
-
-Instead of backpropagating through the complete unrolled recurrent computation, the gradient is approximated through the final step of each reasoning cycle.
-
-### Deep Supervision
-
-Loss feedback is provided at the end of reasoning segments instead of evaluating only the final prediction.
-
-### Adaptive Computation Time
-
-The Q-Head dynamically decides whether the model should continue reasoning or halt.
-
-### Recurrent Reasoning
-
-The reasoning process can be viewed as:
-
-```text
-Input
-  ↓
-L-Module performs several detailed steps
-  ↓
-H-Module updates the high-level state
-  ↓
-Reasoning cycle repeats
-  ↓
-Model refines predictions / backtracks
-  ↓
-Q-Head decides HALT or CONTINUE
-  ↓
-Final Sudoku
+617 Images
+     ↓
+Data Augmentation
+     ↓
+2,634 Images
 ```
 
 ---
 
-## 📏 Evaluation Metrics
+# 🔬 Exploratory Data Analysis
 
-### 1. Cell-Wise Accuracy
-
-Accuracy is calculated over the cells that need to be predicted.
+The augmented dataset contains three classes:
 
 ```text
-Accuracy =
-Correctly Predicted Blank Cells
--------------------------------- × 100
-Total Blank Cells
+Fresh       → 684 samples
+High        → 954 samples
+Low         → 996 samples
 ```
 
-### 2. Average Backtracking
-
-Backtracking measures how often the model changes its predictions while attempting to satisfy Sudoku constraints.
-
-A lower average backtracking value indicates fewer prediction changes during the reasoning process.
+The project performs EDA to examine the class distribution and identify class imbalance.
 
 ---
 
-## 🧪 Models Compared
+# ⚙️ Data Preprocessing
 
-The project compares four approaches:
+The original hyperspectral image contains 281 spectral channels.
 
-| Model                     | Main Idea                                                                  |
-| ------------------------- | -------------------------------------------------------------------------- |
-| **HRM**                   | Hierarchical recurrent reasoning with H/L modules and adaptive computation |
-| **Recurrent Transformer** | Recurrent Transformer-based reasoning using self-attention                 |
-| **RRN**                   | Graph-based recurrent message passing between related Sudoku cells         |
-| **SATNet**                | Differentiable satisfiability-based reasoning                              |
-
----
-
-## 📈 Results
-
-The final comparison table presented in the project presentation reports:
-
-| Model                 | Cell Accuracy | Avg. Backtracking | Final Loss |
-| --------------------- | ------------: | ----------------: | ---------: |
-| **HRM**               |     **71.4%** |          **1.83** | **0.1649** |
-| Recurrent Transformer |        52.38% |              4.72 |     0.2039 |
-| RRN                   |        45.72% |              7.41 |     1.1006 |
-| SATNet                |        36.22% |             43.81 |     1.3975 |
-
----
-
-## 🔍 Key Observations
-
-* HRM achieves the highest cell-wise accuracy reported in the project's final comparison table.
-* HRM shows the lowest average backtracking among the compared models.
-* The hierarchical H/L structure provides separate levels of reasoning.
-* Adaptive Computation Time allows the model to decide when to continue or stop computation.
-* Intermediate timestep visualizations provide insight into how predictions evolve during reasoning.
-* The project investigates reasoning under a low-data training setting rather than relying on massive pretraining datasets.
-
----
-
-## 📁 Suggested Repository Structure
+The raw hyperspectral cube has approximately:
 
 ```text
-HRM-Sudoku/
+300 × 900 × 281
+```
+
+Since pretrained RGB models such as VGG16, ResNet50 and ViT require three-channel input, PCA is used to reduce the hyperspectral representation.
+
+### PCA Dimensionality Reduction
+
+```text
+Original:
+300 × 900 × 281
+
+        ↓ PCA
+
+Reduced:
+300 × 900 × 3
+```
+
+The three principal components are used as an RGB-like representation.
+
+### Resizing
+
+The image is resized to:
+
+```text
+224 × 224 × 3
+```
+
+### ImageNet Normalization
+
+The following ImageNet statistics are used:
+
+```text
+Mean:
+(0.485, 0.456, 0.406)
+
+Standard Deviation:
+(0.229, 0.224, 0.225)
+```
+
+---
+
+# 🏗️ System Architecture
+
+The complete system consists of six major layers.
+
+```text
+┌─────────────────────────────┐
+│ 1. Data Ingestion Layer     │
+│ Raw Hyperspectral Images    │
+└──────────────┬──────────────┘
+               ↓
+┌─────────────────────────────┐
+│ 2. Data Augmentation        │
+│ Flip + Rotation             │
+└──────────────┬──────────────┘
+               ↓
+┌─────────────────────────────┐
+│ 3. Data Split &             │
+│    Preprocessing             │
+│ PCA → RGB → Resize → Norm.  │
+└──────────────┬──────────────┘
+               ↓
+┌─────────────────────────────┐
+│ 4. Feature Extraction       │
+│ VGG16 / ResNet50 / ViT      │
+└──────────────┬──────────────┘
+               ↓
+┌─────────────────────────────┐
+│ 5. ML Classification        │
+│ ANN / XGBoost / RF / NB     │
+│ C4.5 / Ensemble             │
+└──────────────┬──────────────┘
+               ↓
+┌─────────────────────────────┐
+│ 6. Output & UI              │
+│ Fresh / Low / High          │
+└─────────────────────────────┘
+```
+
+---
+
+# 🧠 Feature Extraction Models
+
+Three pretrained deep learning architectures are used as feature extractors.
+
+## 1. VGG16
+
+VGG16 is used as a pretrained feature extraction network.
+
+Input:
+
+```text
+224 × 224 × 3
+```
+
+Output feature vector:
+
+```text
+25,088 dimensions
+```
+
+The extracted features are passed to the machine learning classifiers.
+
+---
+
+## 2. ResNet50
+
+ResNet50 is used to extract deep visual features using residual connections.
+
+Input:
+
+```text
+224 × 224 × 3
+```
+
+Output feature vector:
+
+```text
+2,048 dimensions
+```
+
+---
+
+## 3. Vision Transformer (ViT-B/16)
+
+ViT-B/16 is used as a transformer-based feature extractor.
+
+Input:
+
+```text
+224 × 224 × 3
+```
+
+Output feature vector:
+
+```text
+768 dimensions
+```
+
+The ViT model captures long-range relationships using self-attention.
+
+---
+
+# 🤖 Machine Learning Classifiers
+
+The extracted feature vectors are passed to six different machine learning classifiers.
+
+### Classifiers Used
+
+1. Artificial Neural Network (ANN)
+2. XGBoost
+3. Random Forest
+4. Naive Bayes
+5. C4.5 Decision Tree
+6. Ensemble
+
+### Ensemble Model
+
+The ensemble combines:
+
+```text
+Logistic Regression
+        +
+Naive Bayes
+        +
+C4.5
+```
+
+---
+
+# 🔀 Dataset Splits
+
+Two different train-validation-test configurations were used.
+
+## 70:15:15 Split
+
+```text
+Training   : 1,842
+Validation : 395
+Testing    : 395
+Total      : 2,634
+```
+
+## 80:10:10 Split
+
+```text
+Training   : 2,106
+Validation : 263
+Testing    : 263
+Total      : 2,634
+```
+
+---
+
+# 📏 Evaluation Metrics
+
+The models are evaluated using:
+
+* Accuracy
+* Macro Precision
+* Macro Recall
+* Macro F1-Score
+
+These metrics are used to compare different feature extractor and classifier combinations.
+
+---
+
+# 📈 Results
+
+## VGG16 + Classifiers — 70:15:15
+
+| Model         | Accuracy | Recall |    F1 | Precision |
+| ------------- | -------: | -----: | ----: | --------: |
+| ANN           |    0.810 |  0.816 | 0.819 |     0.822 |
+| XGBoost       |    0.734 |  0.741 | 0.744 |     0.751 |
+| Ensemble      |    0.714 |  0.754 | 0.752 |     0.750 |
+| Naive Bayes   |    0.582 |  0.608 | 0.584 |     0.582 |
+| Random Forest |    0.729 |  0.742 | 0.739 |     0.741 |
+| C4.5          |    0.650 |  0.660 | 0.656 |     0.656 |
+
+---
+
+## ResNet50 + Classifiers — 70:15:15
+
+| Model         | Accuracy | Recall |    F1 | Precision |
+| ------------- | -------: | -----: | ----: | --------: |
+| ANN           |    0.853 |  0.860 | 0.857 |     0.863 |
+| XGBoost       |    0.787 |  0.788 | 0.789 |     0.792 |
+| Ensemble      |    0.713 |  0.733 | 0.713 |     0.722 |
+| Naive Bayes   |    0.453 |  0.489 | 0.425 |     0.488 |
+| Random Forest |    0.812 |  0.819 | 0.815 |     0.814 |
+| C4.5          |    0.617 |  0.633 | 0.627 |     0.623 |
+
+---
+
+# 🏆 Best Performance
+
+The best-performing configuration reported in the project is:
+
+```text
+Feature Extractor : ViT-B/16
+Classifier         : ANN
+Data Split         : 70:15:15
+```
+
+### Performance
+
+```text
+Accuracy  : 0.951
+Recall    : 0.950
+F1 Score  : 0.953
+Precision : 0.957
+```
+
+The project identifies **ViT + ANN with the 70:15:15 split** as the best-performing configuration.
+
+The ANN uses two hidden layers, with Log Loss as the loss function and Adam as the optimizer.
+
+---
+
+# 📊 ViT + ANN Results
+
+The project also includes:
+
+* Training loss curve
+* Validation loss curve
+* Test-set confusion matrix
+
+The confusion matrix provides class-wise prediction information for:
+
+```text
+Fresh
+High Concentration
+Low Concentration
+```
+
+---
+
+# 🖥️ Inference Dashboard
+
+A user-facing inference dashboard is included in the project.
+
+The dashboard allows users to:
+
+1. Upload a hyperspectral image.
+2. Select the feature extraction/model configuration.
+3. Run inference.
+4. View the predicted apple quality class.
+5. View prediction confidence/results.
+
+Output classes:
+
+```text
+Fresh
+High Concentration
+Low Concentration
+```
+
+The project presentation includes screenshots of the inference dashboard and model-by-model prediction results.
+
+---
+
+# 🔬 Methodology
+
+The complete methodology can be summarized as:
+
+```text
+Step 1
+Collect Hyperspectral Apple Images
+        ↓
+Step 2
+Apply Data Augmentation
+        ↓
+Step 3
+Split Dataset
+70:15:15 / 80:10:10
+        ↓
+Step 4
+Apply PCA
+281 Spectral Bands → 3 Components
+        ↓
+Step 5
+Resize
+224 × 224
+        ↓
+Step 6
+ImageNet Normalization
+        ↓
+Step 7
+Feature Extraction
+VGG16 / ResNet50 / ViT
+        ↓
+Step 8
+Extract Feature Vectors
+        ↓
+Step 9
+Machine Learning Classification
+ANN / XGBoost / RF / NB / C4.5 / Ensemble
+        ↓
+Step 10
+Evaluate Performance
+        ↓
+Step 11
+Predict Apple Quality
+Fresh / Low / High
+```
+
+---
+
+# 🛠️ Technologies Used
+
+### Programming
+
+* Python
+
+### Deep Learning
+
+* VGG16
+* ResNet50
+* Vision Transformer (ViT-B/16)
+
+### Machine Learning
+
+* Artificial Neural Network
+* XGBoost
+* Random Forest
+* Naive Bayes
+* C4.5 Decision Tree
+* Ensemble Learning
+
+### Image Processing
+
+* Hyperspectral Imaging
+* PCA
+* Image Resizing
+* ImageNet Normalization
+* Data Augmentation
+
+### Evaluation
+
+* Accuracy
+* Precision
+* Recall
+* F1-Score
+* Confusion Matrix
+* Training/Validation Loss
+
+---
+
+# 📂 Suggested Repository Structure
+
+```text
+Hyperspectral-Apple-Pesticide-Detection/
 │
 ├── README.md
+│
 ├── data/
-│   └── sudoku-extreme/
+│   └── README.md
+│
+├── preprocessing/
+│   ├── pca.py
+│   ├── augmentation.py
+│   └── preprocessing.py
+│
+├── feature_extraction/
+│   ├── vgg16.py
+│   ├── resnet50.py
+│   └── vit.py
 │
 ├── models/
-│   ├── hrm.py
-│   ├── recurrent_transformer.py
-│   ├── rrn.py
-│   └── satnet.py
+│   ├── ann.py
+│   ├── xgboost_model.py
+│   ├── random_forest.py
+│   ├── naive_bayes.py
+│   ├── c45.py
+│   └── ensemble.py
 │
-├── training/
-│   ├── train_hrm.py
-│   └── evaluation.py
+├── evaluation/
+│   ├── metrics.py
+│   ├── confusion_matrix.py
+│   └── results.py
+│
+├── dashboard/
+│   └── app.py
 │
 ├── results/
-│   ├── hrm_act_timesteps.png
-│   ├── hrm_results/
-│   └── visualizations/
+│   ├── confusion_matrix.png
+│   ├── loss_curve.png
+│   └── model_results.csv
 │
 ├── notebooks/
 │   └── experiments.ipynb
@@ -300,77 +662,134 @@ HRM-Sudoku/
 └── requirements.txt
 ```
 
-> The structure above is a suggested organization. Adapt the filenames to the actual files present in the repository.
+> The above structure is a suggested organization. Rename files/folders according to the actual files in your repository.
 
 ---
 
-## ⚙️ Technologies & Concepts
+# 🚀 Applications
 
-* Python
-* PyTorch
-* Deep Learning
-* Recurrent Neural Networks
-* Transformer Architecture
-* Reinforcement Learning
-* Q-Learning
-* Adaptive Computation Time (ACT)
-* Sudoku Constraint Satisfaction
-* Data Augmentation
-* Tensor Embeddings
-* Backtracking
-* Multi-class Classification
+This project can be used as a foundation for:
+
+* 🍎 Apple quality inspection
+* 🧪 Pesticide residue screening
+* 🌾 Agricultural quality assessment
+* 🏭 Automated food inspection
+* 🔬 Non-destructive food analysis
+* 📊 Hyperspectral image classification
+* 🤖 AI-based agricultural monitoring
 
 ---
 
-## 🚀 How the System Works
+# 🔍 Key Features
 
-1. Load a Sudoku puzzle.
-2. Convert the puzzle into an 81-token sequence.
-3. Map digits and blank cells to integer IDs.
-4. Convert the IDs into learnable embeddings.
-5. Process the embeddings through the recurrent H/L reasoning modules.
-6. Repeatedly refine the Sudoku predictions.
-7. Use the Q-Head to decide whether to halt or continue.
-8. Convert the final logits into Sudoku digit predictions.
-9. Evaluate the prediction using cell-wise accuracy and average backtracking.
-10. Visualize intermediate reasoning timesteps.
-
----
-
-## 📚 References
-
-1. Wang, G., Li, J., Sun, Y., Chen, X., Liu, C., Wu, Y., Lu, M., Song, S., & Yadkori, Y. A. (2025). **Hierarchical Reasoning Model**. arXiv:2506.21734.
-2. Palm, R., Paquet, U., & Winther, O. (2018). **Recurrent Relational Networks**. Advances in Neural Information Processing Systems, 31.
-3. Wang, P. W., Donti, P., Wilder, B., & Kolter, Z. (2019). **SATNet: Bridging Deep Learning and Logical Reasoning Using a Differentiable Satisfiability Solver**. International Conference on Machine Learning, PMLR.
-4. Yang, Z., Ishay, A., & Lee, J. (2023). **Learning to Solve Constraint Satisfaction Problems with Recurrent Transformer**. arXiv:2307.04895.
+* Non-destructive hyperspectral inspection
+* Three-class apple quality classification
+* PCA-based hyperspectral dimensionality reduction
+* Data augmentation
+* Pretrained deep learning feature extraction
+* Multiple ML classifier comparison
+* ViT-based feature extraction
+* ANN-based classification
+* Confusion matrix analysis
+* Inference dashboard
+* Model performance comparison
 
 ---
 
-## 📄 Project Documentation
+# 📌 Key Results
 
-The repository is accompanied by the project report and presentation covering:
+The project demonstrates that combining hyperspectral preprocessing with pretrained deep learning feature extraction and traditional machine learning classification can be used for automated apple quality classification.
 
-* Introduction and motivation
-* Literature review
-* System design
-* Dataset and augmentation
-* HRM architecture
-* Training methodology
-* Evaluation metrics
-* Comparative results
-* Intermediate reasoning visualizations
-* Conclusions and references
+The reported best configuration is:
+
+```text
+ViT-B/16 + ANN
+70:15:15 Split
+```
+
+with:
+
+```text
+Accuracy  = 95.1%
+Recall    = 95.0%
+F1 Score  = 95.3%
+Precision = 95.7%
+```
 
 ---
 
-## 👨‍💻 Authors
+# ⚠️ Limitations
 
-**Hamza Ehsan**
-Faculty No.: 23AIBEA627
+The project is based on a specific hyperspectral apple dataset and three pesticide concentration categories.
 
-**Md. Dilnawaz Hussain**
+The system's performance may depend on:
+
+* Dataset characteristics
+* Image acquisition conditions
+* Hyperspectral camera properties
+* Chemical treatment conditions
+* Data distribution
+* Feature extractor
+* Classification model
+
+Further validation on larger and more diverse real-world datasets would be required before practical deployment.
+
+---
+
+# 🔮 Future Scope
+
+Possible future improvements include:
+
+* Testing on larger hyperspectral datasets.
+* Using additional hyperspectral feature extraction techniques.
+* Exploring end-to-end deep learning architectures.
+* Evaluating additional transformer architectures.
+* Improving class imbalance handling.
+* Expanding the system to additional fruits and agricultural products.
+* Integrating real-time hyperspectral cameras.
+* Improving the inference dashboard.
+* Deploying the system for large-scale food quality inspection.
+* Exploring more advanced spectral-spatial learning techniques.
+
+---
+
+# 📚 References
+
+1. S. Md. Mansoor Roomi, B. Sathya Bama, V. Puvi Lakshmi, and M. Vaishnavi,
+   **"Hyperspectral dataset of pure and pesticide-coated apples for measuring the level of fertilizers used,"** Data in Brief, Vol. 49, Article 109321, 2023.
+
+2. A. Shafique, M. Siraj, B. Cheng, S. A. Alsaif, and T. Sadad,
+   **"Hyperspectral imaging and advanced vision transformers for identifying pure and pesticide-coated apples,"** IEEE Access, Vol. 13, pp. 66405–66419, 2025.
+
+---
+
+# 👨‍💻 Authors
+
+### Md Dilnawaz Hussain
+
 Faculty No.: 22AIB470
 
-**Supervisor:** Miss Ayesha Khan
+### Hamza Ehsan
 
-**Minor Project - 1**
+Faculty No.: 23AIBEA627
+
+### Supervisor
+
+**Dr. Junaid Ali Reshi**
+
+Interdisciplinary Centre for Artificial Intelligence
+Zakir Husain College of Engineering & Technology
+Aligarh Muslim University, Aligarh
+
+---
+
+# ⭐ Project Summary
+
+**Hyperspectral Image Based Food Quality Inspection for Pesticide Detection in Apples** combines hyperspectral imaging, PCA-based preprocessing, pretrained deep learning models, and machine learning classifiers to build a non-destructive apple quality inspection system.
+
+The pipeline processes hyperspectral images, reduces their spectral dimensionality, extracts deep visual features using VGG16, ResNet50, or ViT-B/16, and performs three-class classification using multiple machine learning algorithms.
+
+The reported best configuration, **ViT-B/16 + ANN with a 70:15:15 data split**, achieved an accuracy of **95.1%** on the evaluated dataset.
+
+Aur final **ViT + ANN (70:15:15)** result `0.951 accuracy` report/PPT mein explicitly diya gaya hai. :contentReference[oaicite:3]{index=3}
+```
