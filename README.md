@@ -1,8 +1,3 @@
-Bilkul. Tumhare **new project report + PPT** ke basis par GitHub ke liye `README.md` ka **complete text form** neeche de raha hoon. Ye project hai **“Hyperspectral Image Based Food Quality Inspection for Pesticide Detection in Apples”**. Report mein dataset, PCA preprocessing, VGG16/ResNet50/ViT feature extraction, six classifiers aur final ViT + ANN results documented hain. 
-
-Isko directly **GitHub → README.md** mein paste kar sakte ho.
-
-````markdown
 # 🍎 Hyperspectral Image Based Food Quality Inspection for Pesticide Detection in Apples
 
 An AI-based food quality inspection system that uses **Hyperspectral Imaging (HSI)**, **Deep Learning**, and **Machine Learning** to classify apples according to their pesticide concentration.
